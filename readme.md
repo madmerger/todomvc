@@ -33,7 +33,7 @@ Build a TodoMVC app following this spec https://raw.githubusercontent.com/tastej
 Replace `React` with `Vue`, `Svelte`, `Angular`, `Solid`, `Lit`, `Preact`, `Qwik`, or any framework or language you want to evaluate. The result follows the same behavioural surface every example in this repo implements (add, edit, toggle, filter, route, clear completed), so it's directly comparable to the reference apps.
 
 
-## Running the examples and tests
+## Running the examples
 
 The example builds and serves itself with webpack; cd into it, install, and run:
 
@@ -43,15 +43,6 @@ $ npm install
 $ npm run build
 $ npm run serve
 ```
-
-To run the Cypress test suite against the example:
-
-```sh
-$ npm install
-$ npm run test:all
-```
-
-`npm run test:all` sweeps every example in `examples/`. Pass `--framework=javascript-es6` to target a single one. See [tests/README.md](tests/README.md) for details.
 
 
 ## Team
