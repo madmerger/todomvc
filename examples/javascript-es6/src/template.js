@@ -66,18 +66,17 @@ class Template {
      * @returns {string} String containing the count
      */
     itemCounter(activeTodos) {
-        const plural = activeTodos === 1 ? "" : "s";
-        return `<strong>${activeTodos}</strong> item${plural} left`;
+        return `残り <strong>${activeTodos}</strong> 件`;
     }
 
     /**
-     * Updates the text within the "Clear completed" button
+     * Updates the text within the "完了したタスクを削除" button
      *
      * @param  {[type]} completedTodos The number of completed todos.
      * @returns {string} String containing the count
      */
     clearCompletedButton(completedTodos) {
-        return completedTodos > 0 ? "Clear completed" : "";
+        return completedTodos > 0 ? "完了したタスクを削除" : "";
     }
 }
 

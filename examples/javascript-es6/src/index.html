@@ -1,21 +1,21 @@
 <!DOCTYPE html>
-<html lang="en" data-framework="javascript-es6">
+<html lang="ja" data-framework="javascript-es6">
         <meta charset="UTF-8" />
-        <meta name="description" content="A TodoMVC written with JavaScript es5 features." />
+        <meta name="description" content="JavaScript ES6 の機能で実装した TodoMVC です。" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-        <title>TodoMVC: JavaScript Es6 Webpack</title>
+        <title>TodoMVC: JavaScript ES6 Webpack</title>
     </head>
     <body>
         <section class="todoapp">
             <header class="header">
-                <h1>todos</h1>
-                <input class="new-todo" placeholder="What needs to be done?" autofocus />
+                <h1>タスク</h1>
+                <input class="new-todo" placeholder="何をする必要がありますか？" autofocus />
             </header>
             <main class="main">
                 <div class="toggle-all-container">
                     <input class="toggle-all" type="checkbox" />
-                    <label class="toggle-all-label" for="toggle-all">Mark all as complete</label>
+                    <label class="toggle-all-label" for="toggle-all">すべて完了にする</label>
                 </div>
                 <ul class="todo-list"></ul>
             </main>
@@ -23,22 +23,22 @@
                 <span class="todo-count"></span>
                 <ul class="filters">
                     <li>
-                        <a href="#/" class="selected">All</a>
+                        <a href="#/" class="selected">すべて</a>
                     </li>
                     <li>
-                        <a href="#/active">Active</a>
+                        <a href="#/active">未完了</a>
                     </li>
                     <li>
-                        <a href="#/completed">Completed</a>
+                        <a href="#/completed">完了</a>
                     </li>
                 </ul>
-                <button class="clear-completed">Clear completed</button>
+                <button class="clear-completed">完了したタスクを削除</button>
             </footer>
         </section>
         <footer class="info">
-            <p>Double-click to edit a todo</p>
-			<p>Created by the TodoMVC Team</p>
-			<p>Part of <a href="http://todomvc.com">TodoMVC</a></p>
+            <p>ダブルクリックでタスクを編集できます</p>
+			<p>制作: TodoMVC チーム</p>
+			<p><a href="http://todomvc.com">TodoMVC</a> プロジェクトの一部です</p>
         </footer>
 		<script src="./base.js"></script>
     </body>

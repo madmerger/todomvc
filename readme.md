@@ -1,10 +1,10 @@
 # TodoMVC
 
-This repository contains only the TodoMVC Vanilla JavaScript ES6 implementation. It follows the [app specification](app-spec.md).
+このリポジトリには TodoMVC の Vanilla JavaScript ES6 実装のみが含まれています。[アプリ仕様書](app-spec.md)に準拠しています。
 
-## Running
+## 実行方法
 
-Install the dependencies and start the development server:
+依存パッケージをインストールし、開発サーバーを起動します。
 
 ```sh
 $ cd examples/javascript-es6
@@ -12,7 +12,7 @@ $ npm install
 $ npm run dev
 ```
 
-Alternatively, build the app and serve it at http://localhost:7002:
+または、アプリをビルドして http://localhost:7002 で配信します。
 
 ```sh
 $ cd examples/javascript-es6
