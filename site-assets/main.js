@@ -174,44 +174,4 @@
 		}
 	}]);
 
-	function AppTabs() {
-		var tabs = document.querySelector(AppTabs.selectors.tabs);
-		tabs.addEventListener('iron-select', this.onSelect.bind(this));
-		this.listHeight = 0;
-	}
-
-	AppTabs.selectors = {
-		tabs: '.js-app-tabs',
-		list: '.js-app-list',
-		innerList: '.js-app-list-inner'
-	};
-
-	AppTabs.prototype.onSelect = function (e) {
-		var selected = e.currentTarget.selectedItem.dataset.target;
-		[].slice.call(document.querySelectorAll(AppTabs.selectors.list)).forEach(
-			function (el) {
-				var isSelected = el.dataset.appList === selected;
-				el.style.display = isSelected ? 'block' : 'none';
-				if (isSelected) {
-					this.switchTab(el);
-				}
-			}.bind(this)
-		);
-	};
-
-	AppTabs.prototype.switchTab = function (e) {
-		var list = e.querySelector(AppTabs.selectors.innerList);
-		var $clone = $(list)
-			.clone()
-			.css({ visibility: 'hidden' })
-			.height('auto')
-			.appendTo(list.parentElement);
-
-		window.requestAnimationFrame(function () {
-			$clone.remove();
-		}.bind(this));
-	};
-
-	new AppTabs();
-
 }());
