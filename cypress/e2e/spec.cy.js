@@ -22,33 +22,19 @@ if (!framework) {
     Please specify the framework name to test.
     See folder names in the /examples.
 
-      cypress open --env framework=react
+      cypress open --env framework=javascript-es6
 
     Or pass framework name through environment variable
 
-      CYPRESS_framework=angular-dart/web cypress open
+      CYPRESS_framework=javascript-es6 cypress open
   `
   )
 }
 
 // Apps whose runnable index.html is not at examples/<name>/index.html.
-// Frameworks with a build step land their entry point in dist/ (or
-// dist/browser/ for Angular's application builder); legacy examples
-// occasionally use web/ or public/.
+// The example has a build step, so its entry point lands in dist/.
 const frameworkFolders = {
-  ampersand: 'ampersand/',
-  angular: 'angular/dist/browser',
-  'angular-dart': 'angular-dart/web',
-  'chaplin-brunch': 'chaplin-brunch/public',
-  duel: 'duel/www',
-  emberjs: 'emberjs/todomvc',
   'javascript-es6': 'javascript-es6/dist',
-  lit: 'lit/dist',
-  preact: 'preact/dist',
-  react: 'react/dist',
-  'react-redux': 'react-redux/dist',
-  svelte: 'svelte/dist',
-  vue: 'vue/dist',
 }
 const getExampleFolder = framework => frameworkFolders[framework] || framework
 
@@ -57,67 +43,31 @@ const getExampleFolder = framework => frameworkFolders[framework] || framework
 // rebuilds are in-memory only) or because their on-disk format is
 // inscrutable.
 const noLocalStorageCheck = {
-  angular: true,
-  backbone: true,
-  backbone_marionette: true,
-  backbone_require: true,
-  enyo_backbone: true,
-  exoskeleton: true,
-  flight: true,
-  foam: true,
-  js_of_ocaml: true,
-  knockback: true,
-  lit: true,
-  preact: true,
-  puremvc: true,
-  rappidjs: true,
-  react: true,
-  'react-redux': true,
-  reagent: true,
-  serenadejs: true,
-  svelte: true,
-  'typescript-backbone': true,
-  vue: true,
+  'javascript-es6': true,
 }
 
 // Apps where we should also skip the spy assertion that
 // localStorage.setItem was called - same set of in-memory apps as
-// above, plus the canjs quirk.
+// above.
 const noLocalStorageSpyCheck = {
   ...noLocalStorageCheck,
-  canjs: true,
-  canjs_require: true,
 }
 
-const noAppStartCheck = {
-  mithril: true
-}
+const noAppStartCheck = {}
 
 // usually when an app makes localStorage.setItem call we think
 // it is ready to work. But some apps are so slow, that the DOM
 // is well behind the data model. For these apps, do not consider
 // intercepted localStorage.setItem a signal
-const storageSetDoesNotMeanAppStarted = {
-  flight: true,
-  olives: true
-}
+const storageSetDoesNotMeanAppStarted = {}
 
 // some apps serialize data in such a bad way that we cannot
 // check localStorage for keywords like "complete" or "isComplete"
-const badLocalStorageFormat = {
-  js_of_ocaml: true
-}
+const badLocalStorageFormat = {}
 
 // some frameworks really rely on "blur" event
 // to know when typing has finished
-const blurAfterType = {
-  ampersand: true,
-  dijon: true,
-  duel: true,
-  jquery: true,
-  vanillajs: true,
-  'vanilla-es6': true
-}
+const blurAfterType = {}
 
 // add after typing if `...{enter}` is not enough for some frameworks
 // cy.type('{enter}').then(safeBlur)
@@ -129,9 +79,7 @@ const safeBlur = $el => {
 }
 
 // Some frameworks need to avoid runtime determination of selector type.
-const usesIDSelectors = {
-  polymer: false
-}
+const usesIDSelectors = {}
 
 const title = `TodoMVC - ${framework}`
 

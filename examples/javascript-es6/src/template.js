@@ -46,7 +46,7 @@ class Template {
     show(data) {
         let view = "";
 
-        data.reverse().forEach((item, index) => {
+        data.forEach((item, index) => {
             view += createTodoItem({
                 id: item.id,
                 title: escape(item.title),

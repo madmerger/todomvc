@@ -23,7 +23,6 @@
 		<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
 		<link rel="stylesheet" href="site-assets/main.css">
 		<!-- endbuild -->
-		<link rel="import" href="bower_components/paper-tabs/paper-tabs.html">
 	</head>
 	<body>
 		<div class="container">
@@ -53,298 +52,13 @@
 				</div>
 				<div class="col-md-8">
 					<h2>Examples</h2>
-					<style is="custom-style">
-						paper-tabs {
-							--paper-tabs-selection-bar-color: #b12d2b;
-						}
-
-						paper-tab {
-							--paper-tab-ink: #b12d2b;
-						}
-
-						paper-tabs, core-toolbar {
-							color: rgb(53, 53, 53);
-							background-color: #f4f4f4;
-							font-family: 'Helvetica Neue', Helvetica, Arial;
-							box-shadow: 0px 3px 2px rgba(0, 0, 0, 0.2);
-						}
-					</style>
-					<paper-tabs selected="0" class="js-app-tabs">
-						<paper-tab data-target="js">JavaScript</paper-tab>
-						<paper-tab data-target="ctojs">Compile-to-JS</paper-tab>
-						<paper-tab data-target="labs">Labs</paper-tab>
-					</paper-tabs>
-
-					<iron-pages selected="0" class="app-lists">
-						<div class="js-app-list" data-app-list="js">
-							<p class="applist-intro">
-								These are examples written in pure JavaScript.
-							</p>
-							<ul class="js-app-list-inner applist js">
-								<li>
-									<a class="applist-item" href="examples/react/dist/" data-source="http://facebook.github.io/react/" data-content="React is a JavaScript library for building user interfaces.">
-										<span class="link">React</span>
-										<span class="badge" data-color="green">New</span>
-									</a>
-								</li>
-								<li>
-									<a class="applist-item" href="examples/react-redux/dist" data-source="https://react-redux.js.org/" data-content="React Redux is maintained by the Redux team, and kept up-to-date with the latest APIs from Redux and React.">
-										<span class="link">React Redux</span>
-										<span class="badge" data-color="green">New</span>
-									</a>
-								</li>
-								<li>
-									<a class="applist-item" href="examples/vue/dist/" data-source="http://vuejs.org" data-content="Vue.js provides the benefits of MVVM data binding and a composable component system with an extremely simple and flexible API.">
-										<span class="link">Vue.js</span>
-										<span class="badge" data-color="green">New</span>
-									</a>
-								</li>
-								<li>
-									<a class="applist-item" href="examples/preact/dist/" data-source="https://preactjs.com/" data-content="Fast 3kB React alternative with the same modern API. Components & Virtual DOM.">
-										<span class="link">Preact</span>
-										<span class="badge" data-color="green">New</span>
-									</a>
-								</li>
-								<li>
-									<a class="applist-item" href="examples/backbone/dist/" data-source="http://backbonejs.org/" data-content="Backbone.js gives structure to web applications by providing models with key-value binding and custom events, collections with a rich API of enumerable functions, views with declarative event handling, and connects it all to your existing API over a RESTful JSON interface.">
-										<span class="link">Backbone.js</span>
-										<span class="badge" data-color="green">New</span>
-									</a>
-								</li>
-								<li>
-									<a class="applist-item" href="examples/angular/dist/browser/" data-source="https://angular.dev" data-content="Angular is a web framework that empowers developers to build fast, reliable applications.">
-										<span class="link">Angular</span>
-										<span class="badge" data-color="green">New</span>
-									</a>
-								</li>
-								<li>
-									<a class="applist-item" href="examples/emberjs/todomvc/dist/" data-source="http://emberjs.com" data-content="Ember is a JavaScript framework for creating ambitious web applications that eliminates boilerplate and provides a standard application architecture.">
-										<span class="link">Ember.js</span>
-										<span class="badge" data-color="green">New</span>
-									</a>
-								</li>
-								<li>
-									<a class="applist-item" href="examples/lit/dist/" data-source="https://lit.dev/" data-content="Lit is a simple library for building fast, lightweight web components.">
-										<span class="link">Lit</span>
-										<span class="badge" data-color="green">New</span>
-									</a>
-								</li>
-								<li>
-									<a class="applist-item" href="examples/knockoutjs/" data-source="http://knockoutjs.com" data-content="Simplify dynamic JavaScript UIs by applying the Model-View-View Model (MVVM) pattern">
-										<span class="link">KnockoutJS</span>
-									</a>
-								</li>
-								<li>
-									<a class="applist-item" href="examples/dojo/" data-source="http://dojotoolkit.org" data-content="Dojo saves you time and scales with your development process, using web standards as its platform. It’s the toolkit experienced developers turn to for building high quality desktop and mobile web applications.">
-										<span class="link">Dojo</span>
-									</a>
-								</li>
-								<li>
-									<a class="applist-item" href="examples/knockback/" data-source="http://kmalakoff.github.com/knockback/" data-content="Knockback.js provides Knockout.js magic for Backbone.js Models and Collections.">
-										<span class="link">Knockback.js</span>
-									</a>
-								</li>
-								<li>
-									<a class="applist-item" href="examples/canjs/" data-source="http://canjs.us" data-content="CanJS with jQuery. CanJS is a client-side, JavaScript framework that makes building rich web applications easy. It provides can.Model (for connecting to RESTful JSON interfaces), can.View (for template loading and caching), can.Observe (for key-value binding), can.EJS (live binding templates), can.Control (declarative event bindings) and can.route (routing support).">
-										<span class="link">CanJS</span>
-									</a>
-								</li>
-								<li>
-									<a class="applist-item" href="examples/polymer/index.html" data-source="http://polymer-project.org" data-content="Polymer is a new type of library for the web, built on top of Web Components, and designed to leverage the evolving web platform on modern browsers. It is comprised of core platform features (e.g Shadow DOM, Custom Elements, MDV) enabled with polyfills and a next generation web application framework built on these technologies.">
-										<span class="link">Polymer</span>
-									</a>
-								</li>
-
-								<li>
-									<a class="applist-item" href="examples/mithril/" data-source="https://mithril.js.org/" data-content="Mithril is a modern client-side Javascript framework for building Single Page Applications. It's small (< 8kb gzip), fast and provides routing and XHR utilities out of the box.">
-										<span class="link">Mithril</span>
-									</a>
-								</li>
-								<li>
-									<a class="applist-item" href="examples/backbone_marionette/" data-source="http://marionettejs.com" data-content="Backbone.Marionette is a composite application library for Backbone.js that aims to simplify the construction of large scale JavaScript applications.">
-										<span class="link">Marionette.js</span>
-									</a>
-								</li>
-							</ul>
-						</div>
-						<div class="js-app-list" data-app-list="ctojs">
-							<p class="applist-intro">
-								These are applications written in programming
-								languages that compile to JavaScript.
-							</p>
-							<ul class="js-app-list-inner applist js">
-								<li>
-									<a class="applist-item" href="examples/svelte/dist/" data-source="https://svelte.dev/" data-content="Svelte is a new way to build web applications. It's a compiler that takes your declarative components and converts them into efficient JavaScript that surgically updates the DOM.">
-										<span class="link">Svelte</span>
-										<span class="badge" data-color="green">New</span>
-									</a>
-								</li>
-								<li>
-									<a class="applist-item" href="examples/gwt/" data-source="https://developers.google.com/web-toolkit/" data-content="Google Web Toolkit (GWT) is an MVP development toolkit for building and optimizing complex browser-based applications. GWT is used by many products at Google, including Google AdWords.">
-										<span class="link">GWT</span>
-									</a>
-								</li>
-								<li>
-									<a href="examples/closure/" data-source="http://code.google.com/closure/library/" data-content="The Closure Library is a broad, well-tested, modular, and cross-browser JavaScript library. You can pull just what you need from a large set of reusable UI widgets and controls, and from lower-level utilities for DOM manipulation, server communication, animation, data structures, unit testing, rich-text editing, and more.">
-										<span class="link">Closure</span>
-									</a>
-								</li>
-								<li>
-									<a class="applist-item" href="examples/elm/" data-source="http://elm-lang.org" data-content="A functional reactive language for interactive applications">
-										<span class="link">Elm</span>
-									</a>
-								</li>
-								<li>
-									<a class="applist-item" href="examples/angular-dart/web/" data-source="https://github.com/angular/angular.dart" data-content="Dart firstly targets the development of modern and large scale browser-side web apps. It's an object oriented language with a C-style syntax. AngularDart is a port of Angular to Dart.">
-										<span class="link">AngularDart</span>
-									</a>
-								</li>
-								<li>
-									<a class="applist-item" href="examples/typescript-backbone/" data-source="http://typescriptlang.org" data-content="TypeScript is a language for application-scale JavaScript development. It offers classes, modules, interfaces and type-checking at compile time to help you build robust components.">
-										<span class="link">TypeScript + Backbone.js</span>
-									</a>
-								</li>
-								<li>
-									<a class="applist-item" href="examples/typescript-angular/" data-source="http://typescriptlang.org" data-content="An AngularJS + TypeScript implementation of TodoMVC. The only significant difference between this and the vanilla Angular app is that dependency injection is done via annotated constructors, which allows minification of JavaScript.">
-										<span class="link">TypeScript + AngularJS</span>
-									</a>
-								</li>
-								<li>
-									<a class="applist-item" href="examples/typescript-react/" data-source="http://typescriptlang.org" data-content="An TypeScript + React implementation of TodoMVC. TypeScript is a language for application-scale JavaScript development. It offers classes, modules, interfaces and type-checking at compile time to help you build robust components. This examples showcases how to work with TSX files, which allow us to enjoy native JSX support while working with  TypeScript.">
-										<span class="link">TypeScript + React</span>
-									</a>
-								</li>
-								<li>
-									<a class="applist-item" href="examples/reagent/" data-source="https://reagent-project.github.io/" data-content="Reagent provides a minimalistic interface between ClojureScript and React.">
-										<span class="link">Reagent</span>
-									</a>
-								</li>
-								<li>
-									<a class="applist-item" href="examples/binding-scala/" data-source="https://github.com/ThoughtWorksInc/Binding.scala" data-content="Binding.scala is a reactive web framework. This TodoMVC application has the tiniest code size among all the TodoMVC implementations.">
-										<span class="link">Scala.js + Binding.scala</span>
-									</a>
-								</li>
-								<li>
-									<a class="applist-item" href="examples/js_of_ocaml/" data-source="http://ocsigen.org/js_of_ocaml/" data-content="Js_of_ocaml is a compiler of OCaml bytecode to Javascript.">
-										<span class="link">js_of_ocaml</span>
-									</a>
-								</li>
-								<li>
-									<a class="applist-item" href="examples/humble/" data-source="https://github.com/go-humble/humble" data-content="Humble is a collection of loosely-coupled tools designed to build client-side and hybrid web applications using GopherJS, which compiles Go code to JavaScript.">
-										<span class="link">Humble + GopherJS</span>
-									</a>
-								</li>
-							</ul>
-						</div>
-						<div class="js-app-list" data-app-list="labs">
-							<p class="applist-intro">
-								These are examples written in JavaScript that
-								we are still evaluating.
-							</p>
-							<ul class="js-app-list-inner applist js">
-								<li>
-									<a class="applist-item" href="examples/backbone_require/" data-source="http://requirejs.org" data-content="RequireJS is a JavaScript file and module loader. It is optimized for in-browser use, but it can be used in other JavaScript environments, like Rhino and Node. Using a modular script loader like RequireJS will improve the speed and quality of your code.">
-										<span class="link">Backbone.js + RequireJS</span>
-									</a>
-								</li>
-								<li>
-									<a class="applist-item" href="examples/knockoutjs_require/" data-source="http://knockoutjs.com" data-content="This project is an adaptation of /examples/knockoutjs with require.js.">
-										<span class="link">KnockoutJS + RequireJS</span>
-									</a>
-								</li>
-								<li>
-									<a class="applist-item" href="examples/angularjs_require/" data-source="http://angularjs.org" data-content="What HTML would have been had it been designed for web apps. This is an example of using it with AMD modules.">
-										<span class="link">AngularJS + RequireJS</span>
-									</a>
-								</li>
-								<li>
-									<a class="applist-item" href="examples/canjs_require/" data-source="http://canjs.us" data-content="CanJS is a client-side, JavaScript framework that makes building rich web applications easy. The AMD version lets you use the framework in a fully modular fashion and will only what you actually need.">
-										<span class="link">CanJS + RequireJS</span>
-									</a>
-								</li>
-								<li>
-									<a class="applist-item" href="examples/lavaca_require/" data-source="http://getlavaca.com" data-content="A curated collection of tools for building mobile web applications.">
-										<span class="link">Lavaca + RequireJS</span>
-									</a>
-								</li>
-								<li>
-									<a class="applist-item" href="examples/cujo/index.html" data-source="http://cujojs.com" data-content="cujoJS is an architectural framework for building highly modular, scalable, maintainable applications in Javascript.  It provides architectural plumbing, such as modules (AMD and CommonJS), declarative application composition, declarative connections, and aspect oriented programming.">
-										<span class="link">cujoJS</span>
-									</a>
-								</li>
-								<li>
-									<a class="applist-item" href="examples/somajs/" data-source="http://somajs.github.com/somajs" data-content="soma.js is a framework created to build scalable and maintainable javascript applications.">
-										<span class="link">soma.js</span>
-									</a>
-								</li>
-								<li>
-									<a class="applist-item" href="examples/duel/www/" data-source="https://bitbucket.org/mckamey/duel/wiki/Home" data-content="DUEL is a dual-side templating engine using HTML for layout and 100% pure JavaScript as the binding language. The same views may be executed both directly in the browser (client-side template) and on the server (server-side template).">
-										<span class="link">DUEL</span>
-									</a>
-								</li>
-								<li>
-									<a class="applist-item" href="examples/dijon/" data-source="https://github.com/creynders/dijon-framework" data-content="Dijon is an IOC and DI micro-framework for Javascript. Originally it was meant to be a port of Robotlegs, but deviated to something quite different. It remains however heavily inspired by Robotlegs, and more specifically Swiftsuspenders.">
-										<span class="link">Dijon</span>
-									</a>
-								</li>
-								<li>
-									<a class="applist-item" href="examples/enyo_backbone/" data-source="http://enyojs.com/" data-content="Enyo is a simple but powerful encapsulation model, which helps you factor application functionality into self-contained building blocks that are easy to reuse and maintain.">
-										<span class="link">Enyo + Backbone.js</span>
-									</a>
-								</li>
-								<li>
-									<a class="applist-item" href="examples/exoskeleton/" data-source="http://exosjs.com/" data-content="A faster and leaner Backbone for your HTML5 apps.">
-										<span class="link">Exoskeleton</span>
-									</a>
-								</li>
-								<li>
-									<a class="applist-item" href="examples/ractive/" data-source="http://ractivejs.org" data-content="Ractive.js is a next-generation DOM manipulation library, optimised for developer sanity.">
-										<span class="link">Ractive.js</span>
-									</a>
-								</li>
-								<li>
-									<a class="applist-item" href="examples/aurelia/" data-source="http://aurelia.io/" data-content="Aurelia is a next generation JavaScript client framework that leverages simple conventions to empower your creativity">
-										<span class="link">Aurelia</span>
-									</a>
-								</li>
-								<li>
-									<a class="applist-item" href="examples/riotjs/" data-source="http://riotjs.com/" data-content="Riot.js is a React-like user interface micro-library.">
-										<span class="link">Riot</span>
-									</a>
-								</li>
-								<li>
-									<a class="applist-item" href="examples/jsblocks/" data-source="http://jsblocks.com/" data-content="From simple user interfaces to complex single-page applications using faster, server-side rendered and easy to learn framework.">
-										<span class="link">JSBlocks</span>
-									</a>
-								</li>
-							</ul>
-						</div>
-
-					</iron-pages>
-					<hr>
-					<h2>Compare these to a non-framework implementation</h2>
-					<ul class="applist">
-						<li>
-							<a class="applist-item" href="examples/javascript-es5/dist/" data-source="https://developer.mozilla.org/en/JavaScript" data-content="You know JavaScript right? :P">
-								<span class="link">JavaScript ES5</span>
-								<span class="badge" data-color="green">New</span>
-							</a>
-						</li>
+					<p class="applist-intro">
+						This example is written in pure JavaScript, with no framework or library.
+					</p>
+					<ul class="applist js">
 						<li>
 							<a class="applist-item" href="examples/javascript-es6/dist/" data-source="https://developer.mozilla.org/en/JavaScript" data-content="Modern JavaScript and DOM APIs only — no framework, no library. Uses webpack to bundle and optimize.">
 								<span class="link">Modern JavaScript</span>
-								<span class="badge" data-color="green">New</span>
-							</a>
-						</li>
-						<li>
-							<a class="applist-item" href="examples/jquery/dist/" data-source="http://jquery.com" data-content="jQuery is a fast and concise JavaScript Library that simplifies HTML document traversing, event handling, animating, and Ajax interactions for rapid web development. jQuery is designed to change the way that you write JavaScript.">
-								<span class="link">jQuery</span>
-								<span class="badge" data-color="green">New</span>
-							</a>
-						</li>
-						<li>
-							<a class="applist-item" href="examples/web-components/dist/" data-source="https://developer.mozilla.org/en-US/docs/Web/API/Web_components" data-content="Web Components is a suite of different technologies allowing you to create reusable custom elements — with their functionality encapsulated away from the rest of your code — and utilize them in your web apps.">
-								<span class="link">Web Components</span>
 								<span class="badge" data-color="green">New</span>
 							</a>
 						</li>
@@ -375,25 +89,14 @@
 				<div class="col-md-4">
 					<h2>New in 2.0</h2>
 					<ul class="whats-new">
-						<li><h4>Framework Updates 🚀</h4>
+						<li><h4>A Single Reference App 🚀</h4>
 							<div>
-								<p>Each of the actively-maintained example apps has been brought up to its current stable line, with idiomatic code for the modern version.</p>
-								<label class="link" for="updated-expander">Examples ▼</label>
-								<input type="checkbox" id="updated-expander" class="simple-dropdown">
-								<ul class="collapsed" id="updated-apps">
-									<li><a href="examples/angular/dist/browser/">Angular 21</a> (new <code>@angular/build</code> builder)</li>
-									<li><a href="examples/react/dist/">React 19</a> (createRoot, react-router 7)</li>
-									<li><a href="examples/vue/dist/">Vue 3.5</a> (Vite 8)</li>
-									<li><a href="examples/svelte/dist/">Svelte 5</a> (full runes migration)</li>
-									<li><a href="examples/preact/dist/">Preact 10.29</a></li>
-									<li><a href="examples/lit/dist/">Lit 3.3</a></li>
-									<li><a href="examples/react-redux/dist/">React Redux 9</a> with Redux Toolkit 2</li>
-								</ul>
+								<p>The repo now ships one example: <a href="examples/javascript-es6/dist/">Modern JavaScript</a>, built with ES modules and bundled with webpack. The framework showcases have been removed &mdash; use the <a href="https://github.com/tastejs/todomvc/blob/master/app-spec.md">app spec</a> to generate an implementation in the framework you want to evaluate.</p>
 							</div>
 						</li>
 						<li><h4>Test Suite Modernization 🧪</h4>
 							<div>
-								<p>The Cypress test suite is functional again on current Node and now drives the official TodoMVC behavioural spec across every maintained app. Around twenty real spec deviations (trim on save, save on blur, escape handling, accessibility labels, "Clear completed" capitalisation) were caught and fixed along the way.</p>
+								<p>The Cypress test suite is functional again on current Node and drives the official TodoMVC behavioural spec against the example. Around twenty real spec deviations (trim on save, save on blur, escape handling, accessibility labels, "Clear completed" capitalisation) were caught and fixed along the way.</p>
 							</div>
 						</li>
 						<li><h4>Tooling Cleanup 🧹</h4>
@@ -423,9 +126,9 @@
 			<div class="row">
 				<div class="col-md-12">
 					<h2>Build a TodoMVC App with Your AI Coding Agent</h2>
-					<p>Want a TodoMVC implementation in a framework that isn't on this page yet, or one that exactly matches your team's stack? The TodoMVC app spec is plain Markdown and reads cleanly into any modern AI coding agent (Claude Code, Cursor, GitHub Copilot, Codex, Gemini Code Assist, Aider, and so on). Drop the line below into your agent of choice and swap in the framework you want:</p>
+					<p>Want a TodoMVC implementation in a specific framework, or one that exactly matches your team's stack? The TodoMVC app spec is plain Markdown and reads cleanly into any modern AI coding agent (Claude Code, Cursor, GitHub Copilot, Codex, Gemini Code Assist, Aider, and so on). Drop the line below into your agent of choice and swap in the framework you want:</p>
 					<pre><code>Build a TodoMVC app following this spec https://raw.githubusercontent.com/tastejs/todomvc/refs/heads/master/app-spec.md in React</code></pre>
-					<p>Replace <code>React</code> with <code>Vue</code>, <code>Svelte</code>, <code>Angular</code>, <code>Solid</code>, <code>Lit</code>, <code>Preact</code>, <code>Qwik</code>, or any framework or language you want to evaluate. The spec covers the same behavioural surface every example on this page implements (add, edit, toggle, filter, route, clear completed), so the result is directly comparable to the reference apps above.</p>
+					<p>Replace <code>React</code> with <code>Vue</code>, <code>Svelte</code>, <code>Angular</code>, <code>Solid</code>, <code>Lit</code>, <code>Preact</code>, <code>Qwik</code>, or any framework or language you want to evaluate. The spec covers the same behavioural surface the example on this page implements (add, edit, toggle, filter, route, clear completed), so the result is directly comparable to the reference app above.</p>
 					<p>This makes TodoMVC useful as both a teaching artifact and a benchmarkable prompt: a quick way to feel out how a new framework reads, or how a given AI agent handles a non-trivial-but-bounded UI task.</p>
 				</div>
 			</div>
