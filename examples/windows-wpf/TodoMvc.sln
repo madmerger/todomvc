@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TodoMvc.Core", "TodoMvc.Core\TodoMvc.Core.csproj", "{7D5CDB4C-F627-45FB-A6AE-BA4004E67B9F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TodoMvc.Wpf", "TodoMvc.Wpf\TodoMvc.Wpf.csproj", "{75199011-A769-40E8-8DD2-A0391AEA5523}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TodoMvc.Tests", "TodoMvc.Tests\TodoMvc.Tests.csproj", "{0EC211AD-3E2A-4A59-BD3C-E0DA65B454C9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7D5CDB4C-F627-45FB-A6AE-BA4004E67B9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D5CDB4C-F627-45FB-A6AE-BA4004E67B9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D5CDB4C-F627-45FB-A6AE-BA4004E67B9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D5CDB4C-F627-45FB-A6AE-BA4004E67B9F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75199011-A769-40E8-8DD2-A0391AEA5523}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75199011-A769-40E8-8DD2-A0391AEA5523}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75199011-A769-40E8-8DD2-A0391AEA5523}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75199011-A769-40E8-8DD2-A0391AEA5523}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0EC211AD-3E2A-4A59-BD3C-E0DA65B454C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0EC211AD-3E2A-4A59-BD3C-E0DA65B454C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0EC211AD-3E2A-4A59-BD3C-E0DA65B454C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0EC211AD-3E2A-4A59-BD3C-E0DA65B454C9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
