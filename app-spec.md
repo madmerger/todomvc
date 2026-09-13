@@ -69,13 +69,13 @@ Please try to keep the HTML as close to the template as possible. Remove the com
 
 Make sure to follow these:
 
-- Follow our [code style](contributing.md#code-style).
+- Follow the project's code style.
 - Use double-quotes in HTML and single-quotes in JS and CSS.
 - Use npm packages for your third-party dependencies and manually remove files that aren't required for your app to run.
 - Use a constant instead of the keyCode directly: `var ENTER_KEY = 13;`
 - Apps should be written without any preprocessors (Sass/CoffeeScript/..) to reach the largest audience.
 - To make it easy to compare frameworks, the app should look and behave exactly like the template and the other examples.
-- We require apps to work in every browser we [support](contributing.md#browser-compatibility).
+- We require apps to work in every browser we support.
 
 ## Functionality
 
