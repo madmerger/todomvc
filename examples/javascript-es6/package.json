@@ -10,7 +10,9 @@
     "scripts": {
         "dev": "webpack serve --open --config webpack.dev.js",
         "build": "webpack --config webpack.prod.js",
-        "serve": "http-server ./dist -p 7002 -c-1 --cors"
+        "serve": "http-server ./dist -p 7002 -c-1 --cors",
+        "test": "jest",
+        "test:coverage": "jest --coverage"
     },
     "dependencies": {
         "todomvc-app-css": "^2.4.2",
@@ -18,10 +20,15 @@
     },
     "devDependencies": {
         "copy-webpack-plugin": "^12.0.2",
+        "@babel/core": "^7.26.9",
+        "@babel/preset-env": "^7.26.9",
+        "babel-jest": "^29.7.0",
         "css-loader": "^6.7.3",
         "css-minimizer-webpack-plugin": "^4.2.2",
         "html-webpack-plugin": "^5.5.0",
         "http-server": "^14.1.1",
+        "jest": "^29.7.0",
+        "jest-environment-jsdom": "^29.7.0",
         "mini-css-extract-plugin": "^2.7.2",
         "style-loader": "^3.3.1",
         "webpack": "^5.75.0",
