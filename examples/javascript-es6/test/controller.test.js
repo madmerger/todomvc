@@ -1,32 +1,25 @@
+import { vi } from "vitest";
 import Controller from "../src/controller";
 import Model from "../src/model";
 import Store from "../src/store";
 
-const database = () => `db-${Math.random()}`;
-
 class FakeView {
     constructor() {
-        this.handlers = {};
-        this.renders = [];
+        this.callbacks = {};
+        this.render = vi.fn();
+        this.bindCallback = vi.fn((event, handler) => {
+            this.callbacks[event] = handler;
+        });
     }
 
-    bindCallback(event, handler) {
-        this.handlers[event] = handler;
+    trigger(event, parameter) {
+        this.callbacks[event](parameter);
     }
 
-    render(cmd, param) {
-        this.renders.push({ cmd, param });
-    }
-
-    takeRenders() {
-        const renders = this.renders;
-        this.renders = [];
-        return renders;
+    renderedWith(viewCmd) {
+        return this.render.mock.calls.filter((call) => call[0] === viewCmd).map((call) => call[1]);
     }
 }
-
-const createTodo = (model, title, completed = false) =>
-    new Promise((resolve) => model.create(title, (todos) => resolve({ ...todos[0], completed })));
 
 describe("Controller", () => {
     let store;
@@ -34,168 +27,263 @@ describe("Controller", () => {
     let view;
     let controller;
 
+    const addTodos = (titles) => {
+        const ids = [];
+
+        for (const title of titles)
+            model.create(title, (items) => ids.push(items[0].id));
+
+        return ids;
+    };
+
+    const todos = () => {
+        let all;
+        model.read((data) => (all = data));
+        return all;
+    };
+
     beforeEach(() => {
-        store = new Store(database());
+        store = new Store("controller-test-db");
+        store.drop();
         model = new Model(store);
         view = new FakeView();
         controller = new Controller(model, view);
-        controller.setView("#/");
-        view.takeRenders();
     });
 
-    it("binds all view callbacks and ignores blank titles", () => {
-        expect(Object.keys(view.handlers).sort()).toEqual([
-            "itemEdit",
-            "itemEditCancel",
-            "itemEditDone",
-            "itemRemove",
-            "itemToggle",
-            "newTodo",
-            "removeCompleted",
-            "toggleAll",
-        ]);
+    describe("setView", () => {
+        it("ハッシュが空ならすべてのタスクを表示する", () => {
+            addTodos(["A", "B"]);
 
-        controller.addItem("   ");
-        expect(view.takeRenders()).toEqual([]);
+            controller.setView("");
 
-        controller.addItem("new task");
-        const renders = view.takeRenders();
-        expect(renders.some(({ cmd }) => cmd === "clearNewTodo")).toBe(true);
-        expect(renders.some(({ cmd }) => cmd === "showEntries")).toBe(true);
-        model.read((todos) => expect(todos[0].title).toBe("new task"));
+            expect(view.renderedWith("setFilter")).toEqual([""]);
+            expect(view.renderedWith("showEntries")[0]).toHaveLength(2);
+        });
+
+        it("#/active は未完了のみ表示する", () => {
+            const [first, second] = addTodos(["未完了", "完了"]);
+            controller.toggleComplete(second, true, true);
+            view.render.mockClear();
+
+            controller.setView("#/active");
+
+            expect(view.renderedWith("setFilter")).toEqual(["active"]);
+            expect(view.renderedWith("showEntries")[0]).toEqual([
+                { id: first, title: "未完了", completed: false },
+            ]);
+        });
+
+        it("#/completed は完了のみ表示する", () => {
+            const [, second] = addTodos(["未完了", "完了"]);
+            controller.toggleComplete(second, true, true);
+            view.render.mockClear();
+
+            controller.setView("#/completed");
+
+            expect(view.renderedWith("showEntries")[0]).toEqual([
+                { id: second, title: "完了", completed: true },
+            ]);
+        });
     });
 
-    it("toggles individual and all todos in both directions", async () => {
-        const first = await createTodo(model, "first");
-        const second = await createTodo(model, "second", true);
-        model.update(second.id, { completed: true });
-        controller.toggleComplete(first.id, true);
+    describe("addItem", () => {
+        beforeEach(() => controller.setView(""));
 
-        expect(view.takeRenders()).toContainEqual({
-            cmd: "elementComplete",
-            param: { id: first.id, completed: true },
+        it("タスクを保存して入力欄を消す", () => {
+            controller.addItem("買い物");
+
+            expect(todos()).toEqual([{ id: expect.any(Number), title: "買い物", completed: false }]);
+            expect(view.renderedWith("clearNewTodo")).toHaveLength(1);
         });
 
-        controller.toggleAll(true);
-        model.read({ completed: false }, (todos) => expect(todos).toEqual([]));
-        controller.toggleAll(false);
-        model.read({ completed: false }, (todos) => expect(todos).toHaveLength(2));
+        it("空白のみの題名は無視する", () => {
+            controller.addItem("   ");
+
+            expect(todos()).toHaveLength(0);
+            expect(view.renderedWith("clearNewTodo")).toHaveLength(0);
+        });
     });
 
-    it("edits, saves, cancels, and removes items", async () => {
-        const todo = await createTodo(model, "original");
+    describe("編集", () => {
+        let id;
 
-        controller.editItem(todo.id);
-        expect(view.takeRenders()).toContainEqual({
-            cmd: "editItem",
-            param: { id: todo.id, title: "original" },
+        beforeEach(() => {
+            controller.setView("");
+            [id] = addTodos(["元の題名"]);
+            view.render.mockClear();
         });
 
-        controller.editItemSave(todo.id, "  changed  ");
-        expect(view.takeRenders()).toContainEqual({
-            cmd: "editItemDone",
-            param: { id: todo.id, title: "changed" },
-        });
-        model.read(todo.id, (todos) => expect(todos[0].title).toBe("changed"));
+        it("editItem は編集モードを開始する", () => {
+            controller.editItem(id);
 
-        controller.editItemCancel(todo.id);
-        expect(view.takeRenders()).toContainEqual({
-            cmd: "editItemDone",
-            param: { id: todo.id, title: "changed" },
+            expect(view.renderedWith("editItem")).toEqual([{ id, title: "元の題名" }]);
         });
 
-        controller.editItemSave(todo.id, " \t ");
-        expect(view.takeRenders()).toContainEqual({ cmd: "removeItem", param: todo.id });
-        model.read(todo.id, (todos) => expect(todos).toEqual([]));
+        it("editItemSave は題名を更新する", () => {
+            controller.editItemSave(id, "  新しい題名  ");
+
+            expect(todos()[0].title).toBe("新しい題名");
+            expect(view.renderedWith("editItemDone")).toEqual([{ id, title: "新しい題名" }]);
+        });
+
+        it("editItemSave は空の題名でタスクを削除する", () => {
+            controller.editItemSave(id, "   ");
+
+            expect(todos()).toHaveLength(0);
+            expect(view.renderedWith("removeItem")).toEqual([id]);
+        });
+
+        it("editItemCancel は元の題名へ戻す", () => {
+            controller.editItemCancel(id);
+
+            expect(view.renderedWith("editItemDone")).toEqual([{ id, title: "元の題名" }]);
+            expect(todos()[0].title).toBe("元の題名");
+        });
     });
 
-    it("removes one item and all completed items", async () => {
-        const first = await createTodo(model, "first");
-        const second = await createTodo(model, "second");
-        const third = await createTodo(model, "third");
-        model.update(second.id, { completed: true });
-        model.update(third.id, { completed: true });
-        view.takeRenders();
+    describe("削除", () => {
+        beforeEach(() => controller.setView(""));
 
-        controller.removeItem(first.id);
-        expect(view.takeRenders()).toContainEqual({ cmd: "removeItem", param: first.id });
+        it("removeItem は該当タスクを削除する", () => {
+            const [first, second] = addTodos(["消す", "残す"]);
 
-        controller.removeCompletedItems();
-        const renders = view.takeRenders();
-        expect(renders.filter(({ cmd }) => cmd === "removeItem")).toHaveLength(2);
-        model.read((todos) => expect(todos).toEqual([]));
+            controller.removeItem(first);
+
+            expect(todos()).toEqual([{ id: second, title: "残す", completed: false }]);
+            expect(view.renderedWith("removeItem")).toContainEqual(first);
+        });
+
+        it("removeCompletedItems は完了タスクだけ削除する", () => {
+            const [first, second] = addTodos(["未完了", "完了"]);
+            controller.toggleComplete(second, true, true);
+
+            controller.removeCompletedItems();
+
+            expect(todos()).toEqual([{ id: first, title: "未完了", completed: false }]);
+        });
     });
 
-    it("updates counters for empty, active, and all-completed collections", async () => {
-        controller.setView("#/");
-        const emptyRenders = view.takeRenders();
-        expect(emptyRenders).toContainEqual({ cmd: "updateElementCount", param: 0 });
-        expect(emptyRenders).toContainEqual({
-            cmd: "clearCompletedButton",
-            param: { completed: 0, visible: false },
-        });
-        expect(emptyRenders).toContainEqual({ cmd: "toggleAll", param: { checked: true } });
-        expect(emptyRenders).toContainEqual({
-            cmd: "contentBlockVisibility",
-            param: { visible: false },
-        });
+    describe("完了状態", () => {
+        beforeEach(() => controller.setView(""));
 
-        const active = await createTodo(model, "active");
-        view.takeRenders();
-        const completed = await createTodo(model, "completed", true);
-        model.update(completed.id, { completed: true });
-        controller.toggleComplete(completed.id, true);
+        it("toggleComplete は完了状態を切り替える", () => {
+            const [id] = addTodos(["買い物"]);
 
-        const renders = view.takeRenders();
-        expect(renders).toContainEqual({ cmd: "updateElementCount", param: 1 });
-        expect(renders).toContainEqual({
-            cmd: "clearCompletedButton",
-            param: { completed: 1, visible: true },
-        });
-        expect(renders).toContainEqual({ cmd: "toggleAll", param: { checked: false } });
-        expect(renders).toContainEqual({
-            cmd: "contentBlockVisibility",
-            param: { visible: true },
+            controller.toggleComplete(id, true);
+            expect(todos()[0].completed).toBe(true);
+            expect(view.renderedWith("elementComplete")).toContainEqual({ id, completed: true });
+
+            controller.toggleComplete(id, false);
+            expect(todos()[0].completed).toBe(false);
         });
 
-        controller.toggleComplete((await createTodo(model, "last")).id, true);
-        controller.toggleComplete(active.id, true);
-        const allCompleted = view.takeRenders();
-        expect(allCompleted).toContainEqual({ cmd: "toggleAll", param: { checked: true } });
+        it("silent 指定では再フィルターしない", () => {
+            const [id] = addTodos(["買い物"]);
+            view.render.mockClear();
 
-        await Promise.resolve();
+            controller.toggleComplete(id, true, true);
+
+            expect(view.renderedWith("showEntries")).toHaveLength(0);
+        });
+
+        it("toggleAll はすべてのタスクを完了にする", () => {
+            addTodos(["A", "B"]);
+
+            controller.toggleAll(true);
+
+            expect(todos().every((todo) => todo.completed)).toBe(true);
+        });
+
+        it("toggleAll(false) はすべてのタスクを未完了に戻す", () => {
+            addTodos(["A", "B"]);
+            controller.toggleAll(true);
+
+            controller.toggleAll(false);
+
+            expect(todos().every((todo) => todo.completed)).toBe(false);
+        });
     });
 
-    it("routes all, active, and completed entries and sets the filter", async () => {
-        const active = await createTodo(model, "active");
-        const completed = await createTodo(model, "completed", true);
-        model.update(completed.id, { completed: true });
-        view.takeRenders();
+    describe("件数表示", () => {
+        it("残件数・削除ボタン・一括チェック・表示状態を更新する", () => {
+            controller.setView("");
+            const [first] = addTodos(["A", "B"]);
+            controller.toggleComplete(first, true);
+            view.render.mockClear();
 
-        controller.setView("#/active");
-        view.takeRenders();
-        controller.setView("#/");
-        let renders = view.takeRenders();
-        expect(renders.find(({ cmd }) => cmd === "showEntries").param).toEqual(
-            expect.arrayContaining([
-                expect.objectContaining({ id: active.id }),
-                expect.objectContaining({ id: completed.id }),
-            ])
-        );
-        expect(renders).toContainEqual({ cmd: "setFilter", param: "" });
+            controller._updateCount();
 
-        controller.setView("#/active");
-        renders = view.takeRenders();
-        expect(renders.find(({ cmd }) => cmd === "showEntries").param).toEqual([
-            expect.objectContaining({ id: active.id }),
-        ]);
-        expect(renders).toContainEqual({ cmd: "setFilter", param: "active" });
+            expect(view.renderedWith("updateElementCount")).toEqual([1]);
+            expect(view.renderedWith("clearCompletedButton")).toEqual([{ completed: 1, visible: true }]);
+            expect(view.renderedWith("toggleAll")).toEqual([{ checked: false }]);
+            expect(view.renderedWith("contentBlockVisibility")).toEqual([{ visible: true }]);
+        });
 
-        controller.setView("#/completed");
-        renders = view.takeRenders();
-        expect(renders.find(({ cmd }) => cmd === "showEntries").param).toEqual([
-            expect.objectContaining({ id: completed.id }),
-        ]);
-        expect(renders).toContainEqual({ cmd: "setFilter", param: "completed" });
+        it("タスクが無ければコンテンツを隠す", () => {
+            controller.setView("");
+            view.render.mockClear();
+
+            controller._updateCount();
+
+            expect(view.renderedWith("clearCompletedButton")).toEqual([{ completed: 0, visible: false }]);
+            expect(view.renderedWith("contentBlockVisibility")).toEqual([{ visible: false }]);
+            expect(view.renderedWith("toggleAll")).toEqual([{ checked: true }]);
+        });
+    });
+
+    describe("ビューからのイベント", () => {
+        beforeEach(() => controller.setView(""));
+
+        it("newTodo でタスクを追加する", () => {
+            view.trigger("newTodo", "追加された");
+
+            expect(todos()[0].title).toBe("追加された");
+        });
+
+        it("itemEdit / itemEditDone / itemEditCancel を仲介する", () => {
+            const [id] = addTodos(["元"]);
+
+            view.trigger("itemEdit", { id });
+            expect(view.renderedWith("editItem")).toEqual([{ id, title: "元" }]);
+
+            view.trigger("itemEditDone", { id, title: "新" });
+            expect(todos()[0].title).toBe("新");
+
+            view.trigger("itemEditCancel", { id });
+            expect(view.renderedWith("editItemDone")).toContainEqual({ id, title: "新" });
+        });
+
+        it("itemRemove でタスクを削除する", () => {
+            const [id] = addTodos(["消す"]);
+
+            view.trigger("itemRemove", { id });
+
+            expect(todos()).toHaveLength(0);
+        });
+
+        it("itemToggle で完了状態を切り替える", () => {
+            const [id] = addTodos(["買い物"]);
+
+            view.trigger("itemToggle", { id, completed: true });
+
+            expect(todos()[0].completed).toBe(true);
+        });
+
+        it("removeCompleted で完了タスクを削除する", () => {
+            const [, second] = addTodos(["未完了", "完了"]);
+            view.trigger("itemToggle", { id: second, completed: true });
+
+            view.trigger("removeCompleted");
+
+            expect(todos()).toHaveLength(1);
+        });
+
+        it("toggleAll ですべて完了にする", () => {
+            addTodos(["A", "B"]);
+
+            view.trigger("toggleAll", { completed: true });
+
+            expect(todos().every((todo) => todo.completed)).toBe(true);
+        });
     });
 });

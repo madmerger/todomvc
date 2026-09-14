@@ -1,104 +1,108 @@
+import { vi } from "vitest";
 import Model from "../src/model";
-import Store from "../src/store";
-
-const database = () => `db-${Math.random()}`;
 
 describe("Model", () => {
-    let store;
+    let storage;
     let model;
 
     beforeEach(() => {
-        store = new Store(database());
-        model = new Model(store);
+        storage = {
+            save: vi.fn(),
+            find: vi.fn(),
+            findAll: vi.fn(),
+            remove: vi.fn(),
+            drop: vi.fn(),
+        };
+        model = new Model(storage);
     });
 
-    it("creates trimmed, incomplete todos and treats missing titles as empty", () => {
-        const created = [];
-        model.create("  task  ", (todos) => created.push(...todos));
-        model.create(undefined, (todos) => created.push(...todos));
-        model.create("", (todos) => created.push(...todos));
+    describe("create", () => {
+        it("題名の前後の空白を除いて保存する", () => {
+            const callback = vi.fn();
 
-        expect(created).toEqual([
-            { id: expect.any(Number), title: "task", completed: false },
-            { id: expect.any(Number), title: "", completed: false },
-            { id: expect.any(Number), title: "", completed: false },
-        ]);
-    });
+            model.create("  買い物  ", callback);
 
-    it("reads all todos when given a callback", () => {
-        const callback = vi.fn();
-        const findAll = vi.spyOn(store, "findAll");
-
-        model.read(callback);
-
-        expect(findAll).toHaveBeenCalledWith(callback);
-        expect(callback).toHaveBeenCalledWith([]);
-    });
-
-    it("reads an id query as an integer", () => {
-        const find = vi.spyOn(store, "find");
-        const callback = vi.fn();
-
-        model.read("1", callback);
-        model.read(2, callback);
-
-        expect(find).toHaveBeenNthCalledWith(1, { id: 1 }, callback);
-        expect(find).toHaveBeenNthCalledWith(2, { id: 2 }, callback);
-    });
-
-    it("reads object queries and delegates updates and removals", () => {
-        const query = { completed: true };
-        const readCallback = vi.fn();
-        const find = vi.spyOn(store, "find");
-        model.read(query, readCallback);
-        expect(find).toHaveBeenCalledWith(query, readCallback);
-
-        const save = vi.spyOn(store, "save");
-        const remove = vi.spyOn(store, "remove");
-        const drop = vi.spyOn(store, "drop");
-        const callback = vi.fn();
-
-        model.update(4, { completed: true }, callback);
-        model.remove(4, callback);
-        model.removeAll(callback);
-
-        expect(save).toHaveBeenCalledWith({ completed: true }, callback, 4);
-        expect(remove).toHaveBeenCalledWith(4, callback);
-        expect(drop).toHaveBeenCalledWith(callback);
-    });
-
-    it("updates and removes todos through real storage", () => {
-        let created;
-        model.create("before", (todos) => {
-            created = todos[0];
+            expect(storage.save).toHaveBeenCalledWith({ title: "買い物", completed: false }, callback);
         });
 
-        model.update(created.id, { title: "after" });
-        model.read(created.id, (todos) => expect(todos[0].title).toBe("after"));
+        it("題名が無い場合は空文字で作成する", () => {
+            model.create();
 
-        model.remove(created.id);
-        model.read(created.id, (todos) => expect(todos).toEqual([]));
-
-        model.create("another");
-        model.removeAll();
-        model.read((todos) => expect(todos).toEqual([]));
+            expect(storage.save).toHaveBeenCalledWith({ title: "", completed: false }, undefined);
+        });
     });
 
-    it("counts active, completed, and total todos", () => {
-        store.save({ title: "active", completed: false });
-        store.save({ title: "done one", completed: true });
-        store.save({ title: "done two", completed: true });
+    describe("read", () => {
+        it("関数のみ渡すと全件取得する", () => {
+            const callback = vi.fn();
 
+            model.read(callback);
+
+            expect(storage.findAll).toHaveBeenCalledWith(callback);
+        });
+
+        it("文字列や数値は ID として検索する", () => {
+            const callback = vi.fn();
+
+            model.read("3", callback);
+            model.read(7, callback);
+
+            expect(storage.find).toHaveBeenNthCalledWith(1, { id: 3 }, callback);
+            expect(storage.find).toHaveBeenNthCalledWith(2, { id: 7 }, callback);
+        });
+
+        it("オブジェクトはクエリーとして検索する", () => {
+            const callback = vi.fn();
+
+            model.read({ completed: true }, callback);
+
+            expect(storage.find).toHaveBeenCalledWith({ completed: true }, callback);
+        });
+    });
+
+    it("update は ID 付きで保存する", () => {
         const callback = vi.fn();
-        model.getCount(callback);
 
-        expect(callback).toHaveBeenCalledWith({ active: 1, completed: 2, total: 3 });
+        model.update(1, { title: "更新" }, callback);
+
+        expect(storage.save).toHaveBeenCalledWith({ title: "更新" }, callback, 1);
     });
 
-    it("returns early from getCount without a callback", () => {
-        const findAll = vi.spyOn(store, "findAll");
+    it("remove はストレージの削除を呼ぶ", () => {
+        const callback = vi.fn();
 
-        expect(model.getCount()).toBeUndefined();
-        expect(findAll).not.toHaveBeenCalled();
+        model.remove(2, callback);
+
+        expect(storage.remove).toHaveBeenCalledWith(2, callback);
+    });
+
+    it("removeAll はストレージを破棄する", () => {
+        const callback = vi.fn();
+
+        model.removeAll(callback);
+
+        expect(storage.drop).toHaveBeenCalledWith(callback);
+    });
+
+    describe("getCount", () => {
+        it("未完了・完了・合計を数える", () => {
+            storage.findAll.mockImplementation((cb) =>
+                cb([
+                    { completed: true },
+                    { completed: false },
+                    { completed: false },
+                ])
+            );
+            const callback = vi.fn();
+
+            model.getCount(callback);
+
+            expect(callback).toHaveBeenCalledWith({ active: 2, completed: 1, total: 3 });
+        });
+
+        it("コールバックが無ければ何もしない", () => {
+            expect(model.getCount()).toBeUndefined();
+            expect(storage.findAll).not.toHaveBeenCalled();
+        });
     });
 });

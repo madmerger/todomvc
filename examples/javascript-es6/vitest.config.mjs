@@ -9,7 +9,6 @@ export default defineConfig({
             provider: "v8",
             reporter: ["text", "html", "lcov"],
             include: ["src/**/*.js"],
-            exclude: ["src/app.js"],
             thresholds: {
                 statements: 80,
                 branches: 80,

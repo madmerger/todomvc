@@ -1,102 +1,176 @@
+import { vi } from "vitest";
 import Store from "../src/store";
 
-const database = () => `db-${Math.random()}`;
+const seed = (store, titles) => {
+    const saved = [];
+
+    for (const title of titles)
+        store.save({ title, completed: false }, (items) => saved.push(items[0]));
+
+    return saved;
+};
 
 describe("Store", () => {
     let store;
 
     beforeEach(() => {
-        store = new Store(database());
+        store = new Store("test-db");
+        store.drop();
     });
 
-    it("returns undefined when find has no callback and finds matching todos", () => {
-        expect(store.find({ completed: false })).toBeUndefined();
+    it("コレクションが無ければ空で初期化し、コールバックへ渡す", () => {
+        const callback = vi.fn();
 
-        store.save({ title: "active", completed: false });
-        store.save({ title: "done", completed: true });
+        new Store("fresh-db", callback);
 
-        let result;
-        store.find({ completed: false }, (todos) => {
-            result = todos;
+        expect(callback).toHaveBeenCalledWith({ todos: [] });
+    });
+
+    it("既存のコレクションは初期化で上書きしない", () => {
+        seed(store, ["既存"]);
+        const callback = vi.fn();
+
+        new Store("test-db", callback);
+
+        expect(callback.mock.calls[0][0].todos).toHaveLength(1);
+    });
+
+    describe("save", () => {
+        it("新規アイテムに一意な ID を採番して追加する", () => {
+            const [first, second] = seed(store, ["一つ目", "二つ目"]);
+
+            expect(first.id).toEqual(expect.any(Number));
+            expect(second.id).toBe(first.id + 1);
         });
 
-        expect(result).toHaveLength(1);
-        expect(result[0].title).toBe("active");
-    });
+        it("ID 指定時は既存アイテムのプロパティーを更新する", () => {
+            const [item] = seed(store, ["元の題名"]);
+            const callback = vi.fn();
 
-    it("finds all todos and returns undefined without a callback", () => {
-        expect(store.findAll()).toBeUndefined();
-        store.save({ title: "first" });
-        store.save({ title: "second" });
+            store.save({ title: "新しい題名", completed: true }, callback, item.id);
 
-        const todos = [];
-        store.findAll((data) => todos.push(...data));
-
-        expect(todos.map(({ title }) => title)).toEqual(["first", "second"]);
-    });
-
-    it("inserts a todo, assigns an id, and returns the inserted item", () => {
-        const todo = { title: "new", completed: false };
-        let result;
-
-        store.save(todo, (todos) => {
-            result = todos;
+            expect(callback.mock.calls[0][0]).toEqual([
+                { id: item.id, title: "新しい題名", completed: true },
+            ]);
         });
 
-        expect(todo.id).toEqual(expect.any(Number));
-        expect(result).toEqual([todo]);
-        store.findAll((todos) => expect(todos).toEqual([todo]));
-    });
+        it("存在しない ID の更新は何も変更しない", () => {
+            seed(store, ["残るタスク"]);
 
-    it("updates only a matching id and merges update keys", () => {
-        let inserted;
-        store.save({ title: "before", completed: false, extra: "keep" }, (todos) => {
-            inserted = todos[0];
-        });
+            store.save({ title: "無視される" }, undefined, 9999);
 
-        store.save({ title: "after", completed: true }, undefined, inserted.id);
-        store.findAll((todos) => {
-            expect(todos[0]).toEqual({
-                id: inserted.id,
-                title: "after",
-                completed: true,
-                extra: "keep",
+            store.findAll((todos) => {
+                expect(todos).toHaveLength(1);
+                expect(todos[0].title).toBe("残るタスク");
             });
         });
 
-        store.save({ title: "ignored" }, undefined, inserted.id + 1);
-        store.findAll((todos) => expect(todos[0].title).toBe("after"));
+        it("コールバックなしでも保存できる", () => {
+            store.save({ title: "黙って保存", completed: false });
+
+            store.findAll((todos) => expect(todos).toHaveLength(1));
+        });
     });
 
-    it("removes a todo and drops all todos", () => {
-        let first;
-        let second;
-        store.save({ title: "first" }, (todos) => {
-            first = todos[0];
-        });
-        store.save({ title: "second" }, (todos) => {
-            second = todos[0];
+    describe("find", () => {
+        it("クエリーに一致するアイテムだけ返す", () => {
+            const [active, completed] = seed(store, ["未完了", "完了"]);
+            store.save({ completed: true }, undefined, completed.id);
+            const callback = vi.fn();
+
+            store.find({ completed: false }, callback);
+
+            expect(callback.mock.calls[0][0]).toEqual([
+                { id: active.id, title: "未完了", completed: false },
+            ]);
         });
 
-        let afterRemove;
-        store.remove(first.id, (todos) => {
-            afterRemove = todos;
-        });
-        expect(afterRemove).toEqual([second]);
+        it("複数条件をすべて満たすアイテムを返す", () => {
+            const [item] = seed(store, ["対象"]);
+            const callback = vi.fn();
 
-        let afterDrop;
-        store.drop((todos) => {
-            afterDrop = todos;
+            store.find({ id: item.id, completed: false }, callback);
+            store.find({ id: item.id, completed: true }, callback);
+
+            expect(callback.mock.calls[0][0]).toHaveLength(1);
+            expect(callback.mock.calls[1][0]).toHaveLength(0);
         });
-        expect(afterDrop).toEqual([]);
+
+        it("コールバックが無ければ何もしない", () => {
+            expect(store.find({ completed: true })).toBeUndefined();
+        });
     });
 
-    it("passes initial data to the constructor callback", () => {
-        let initial;
-        new Store(database(), (data) => {
-            initial = data;
+    describe("findAll", () => {
+        it("全アイテムを返す", () => {
+            seed(store, ["A", "B"]);
+            const callback = vi.fn();
+
+            store.findAll(callback);
+
+            expect(callback.mock.calls[0][0]).toHaveLength(2);
         });
 
-        expect(initial).toEqual({ todos: [] });
+        it("コールバックが無ければ何もしない", () => {
+            expect(store.findAll()).toBeUndefined();
+        });
+    });
+
+    describe("remove", () => {
+        it("ID を指定してアイテムを削除する", () => {
+            const [first, second] = seed(store, ["消す", "残す"]);
+            const callback = vi.fn();
+
+            store.remove(first.id, callback);
+
+            expect(callback.mock.calls[0][0]).toEqual([
+                { id: second.id, title: "残す", completed: false },
+            ]);
+        });
+
+        it("一致する ID が無ければ何も削除しない", () => {
+            seed(store, ["残る"]);
+            const callback = vi.fn();
+
+            store.remove(9999, callback);
+
+            expect(callback.mock.calls[0][0]).toHaveLength(1);
+        });
+
+        it("コールバックなしでも削除できる", () => {
+            const [item] = seed(store, ["消える"]);
+
+            store.remove(item.id);
+
+            store.findAll((todos) => expect(todos).toHaveLength(0));
+        });
+    });
+
+    describe("drop", () => {
+        it("全データを削除する", () => {
+            seed(store, ["A", "B"]);
+            const callback = vi.fn();
+
+            store.drop(callback);
+
+            expect(callback).toHaveBeenCalledWith([]);
+        });
+
+        it("コールバックなしでも削除できる", () => {
+            seed(store, ["A"]);
+
+            store.drop();
+
+            store.findAll((todos) => expect(todos).toEqual([]));
+        });
+    });
+
+    it("DB 名ごとにデータを分離する", () => {
+        const other = new Store("other-db");
+        other.drop();
+        seed(store, ["こちらだけ"]);
+
+        other.findAll((todos) => expect(todos).toEqual([]));
+        store.findAll((todos) => expect(todos).toHaveLength(1));
     });
 });
