@@ -1,16 +1,16 @@
-# Application Specification
+# アプリケーション仕様書
 
-We have created this short spec to help you create awesome and consistent todo apps. Make sure to not only read it but to understand it as well.
+一貫性のある優れた todo アプリを作成できるよう、この短い仕様書を用意しました。読むだけでなく、内容を理解するようにしてください。
 
-## Template Application
+## テンプレートアプリケーション
 
-Our [template](https://github.com/tastejs/todomvc-app-template/) should be used as the base when implementing a todo app. Before implementing, we recommend that you interact with some of the other apps to see how they're built and how they behave. Check out the [Backbone app](http://todomvc.com/examples/backbone/dist) if you need a reference implementation. If something is unclear or could be improved, [let us know](https://github.com/tastejs/todomvc/issues).
+todo アプリを実装する際は、[テンプレート](https://github.com/tastejs/todomvc-app-template/)をベースとして使用してください。実装前に、他のアプリをいくつか操作して、どのように作られ、どのように振る舞うかを確認することをおすすめします。リファレンス実装が必要な場合は [Backbone アプリ](http://todomvc.com/examples/backbone/dist)を参照してください。不明点や改善できる点があれば、[お知らせください](https://github.com/tastejs/todomvc/issues)。
 
-## Structure
+## 構成
 
-### Directory Structure
+### ディレクトリ構成
 
-Recommended file structure:
+推奨されるファイル構成:
 
 ```
 index.html
@@ -25,11 +25,11 @@ js/
 readme.md
 ```
 
-Try to follow this structure as close as possible while still keeping to the framework’s best practices.
+フレームワークのベストプラクティスを守りつつ、できる限りこの構成に従ってください。
 
-Components should be split up into separate files and placed into folders where it makes the most sense.
+コンポーネントは個別のファイルに分割し、最も適切と思われるフォルダーに配置してください。
 
-Example:
+例:
 
 ```
 js/
@@ -40,15 +40,15 @@ js/
     └── todo.js
 ```
 
-Keep in mind that the framework’s best practices on how to structure your app come first.
+アプリの構成方法については、フレームワークのベストプラクティスが優先されることに留意してください。
 
 ### README
 
-All examples must include a README describing the framework, the general implementation, and the build process if required. There is an [example readme](https://github.com/tastejs/todomvc-app-template/blob/master/app-readme.md) included in the [template](https://github.com/tastejs/todomvc-app-template).
+すべてのサンプルには、フレームワーク、全体的な実装、（必要であれば）ビルド手順を説明する README を含める必要があります。[テンプレート](https://github.com/tastejs/todomvc-app-template)には [README の例](https://github.com/tastejs/todomvc-app-template/blob/master/app-readme.md)が含まれています。
 
-### Dependency Management
+### 依存関係の管理
 
-Unless it conflicts with the project's best practices, your example should use [npm](https://npmjs.com) for package management. Specify your dependencies in a `package.json` file in the root directory of your app. The file must include `todomvc-common` and `todomvc-app-css` as dependencies. An example `package.json` could look like this:
+プロジェクトのベストプラクティスと矛盾しない限り、サンプルではパッケージ管理に [npm](https://npmjs.com) を使用してください。依存関係はアプリのルートディレクトリーにある `package.json` に記述します。このファイルには `todomvc-common` と `todomvc-app-css` を依存関係として含める必要があります。`package.json` の例:
 
 ```json
 {
@@ -61,62 +61,62 @@ Unless it conflicts with the project's best practices, your example should use [
 }
 ```
 
-You should `.gitignore` everything in `node_modules` except the files actually used by your example. That means that documentation, READMEs and tests should not be included in the pull request.
+`node_modules` 内のファイルは、サンプルが実際に使用するもの以外すべて `.gitignore` してください。つまり、ドキュメント・README・テストはプルリクエストに含めないということです。
 
-### Code
+### コード
 
-Please try to keep the HTML as close to the template as possible. Remove the comments from the HTML when you are finished. The `base.css` file should be referenced from the assets folder and should not be touched. If you need to change some styles, use the `app.css` file, but try to keep changes to a minimum. Remember to update the relative paths when using the template.
+HTML はできる限りテンプレートに近い形に保ってください。作業が終わったら HTML からコメントを削除してください。`base.css` は assets フォルダーから参照し、変更しないでください。スタイルを変更する必要がある場合は `app.css` を使用し、変更は最小限にとどめてください。テンプレートを使う際は相対パスの更新を忘れないでください。
 
-Make sure to follow these:
+以下の点を必ず守ってください。
 
-- Follow the project's code style.
-- Use double-quotes in HTML and single-quotes in JS and CSS.
-- Use npm packages for your third-party dependencies and manually remove files that aren't required for your app to run.
-- Use a constant instead of the keyCode directly: `var ENTER_KEY = 13;`
-- Apps should be written without any preprocessors (Sass/CoffeeScript/..) to reach the largest audience.
-- To make it easy to compare frameworks, the app should look and behave exactly like the template and the other examples.
-- We require apps to work in every browser we support.
+- プロジェクトのコードスタイルに従う。
+- HTML ではダブルクォート、JS と CSS ではシングルクォートを使用する。
+- サードパーティーの依存関係には npm パッケージを使用し、アプリの実行に不要なファイルは手動で削除する。
+- keyCode を直接書かずに定数を使用する: `var ENTER_KEY = 13;`
+- 幅広い読者に届けるため、プリプロセッサー（Sass／CoffeeScript など）を使わずに記述する。
+- フレームワーク同士を比較しやすくするため、アプリはテンプレートおよび他のサンプルとまったく同じ見た目・挙動にする。
+- サポート対象のすべてのブラウザーで動作することを必須とする。
 
-## Functionality
+## 機能
 
-### No todos
+### todo が 1 件もない場合
 
-When there are no todos, `#main` and `#footer` should be hidden.
+todo が 1 件もないときは、`#main` と `#footer` を非表示にします。
 
-### New todo
+### 新しい todo
 
-New todos are entered in the input at the top of the app. The input element should be focused when the page is loaded, preferably by using the `autofocus` input attribute. Pressing Enter creates the todo, appends it to the todo list, and clears the input. Make sure to `.trim()` the input and then check that it's not empty before creating a new todo.
+新しい todo はアプリ上部の入力欄から入力します。ページ読み込み時に入力要素へフォーカスを当てます（`autofocus` 属性の利用が望ましい）。Enter を押すと todo が作成されて todo リストに追加され、入力欄がクリアされます。入力値は必ず `.trim()` し、空でないことを確認してから新しい todo を作成してください。
 
-### Mark all as complete
+### すべて完了にする
 
-This checkbox toggles all the todos to the same state as itself. Make sure to clear the checked state after the "Clear completed" button is clicked. The "Mark all as complete" checkbox should also be updated when single todo items are checked/unchecked. Eg. When all the todos are checked it should also get checked.
+このチェックボックスは、すべての todo を自身と同じ状態に切り替えます。「完了したタスクを削除」ボタンがクリックされた後は、チェック状態を必ずクリアしてください。個々の todo がチェック／チェック解除されたときにも「すべて完了にする」チェックボックスを更新する必要があります。たとえば、すべての todo がチェックされたらこのチェックボックスもチェック状態になります。
 
-### Item
+### 項目
 
-A todo item has three possible interactions:
+todo 項目には 3 つの操作があります。
 
-1. Clicking the checkbox marks the todo as complete by updating its `completed` value and toggling the class `completed` on its parent `<li>`
+1. チェックボックスをクリックすると、`completed` の値が更新され、親の `<li>` の `completed` クラスが切り替わって完了状態になります。
 
-2. Double-clicking the `<label>` activates editing mode, by toggling the `.editing` class on its `<li>`
+2. `<label>` をダブルクリックすると、`<li>` の `.editing` クラスが切り替わり、編集モードになります。
 
-3. Hovering over the todo shows the remove button (`.destroy`)
+3. todo にマウスを重ねると削除ボタン（`.destroy`）が表示されます。
 
-### Editing
+### 編集
 
-When editing mode is activated it will hide the other controls and bring forward an input that contains the todo title, which should be focused (`.focus()`). The edit should be saved on both blur and enter, and the `editing` class should be removed. Make sure to `.trim()` the input and then check that it's not empty. If it's empty the todo should instead be destroyed. If escape is pressed during the edit, the edit state should be left and any changes be discarded.
+編集モードになると他のコントロールが隠れ、todo のタイトルを含む入力欄が前面に表示され、フォーカス（`.focus()`）されます。編集内容は blur と Enter の両方で保存され、`editing` クラスは取り除かれます。入力値は必ず `.trim()` し、空でないことを確認してください。空の場合は、その todo を削除します。編集中に Escape が押された場合は編集状態を解除し、変更は破棄します。
 
-### Counter
+### カウンター
 
-Displays the number of active todos in a pluralized form. Make sure the number is wrapped by a `<strong>` tag. Also make sure to pluralize the `item` word correctly: `0 items`, `1 item`, `2 items`. Example: **2** items left
+未完了の todo 件数を表示します。数値は必ず `<strong>` タグで囲んでください。日本語では単数・複数の区別が不要なため、`残り 0 件`、`残り 1 件`、`残り 2 件` のように単一の表現を使用します。例: 残り **2** 件
 
-### Clear completed button
+### 完了したタスクを削除ボタン
 
-Removes completed todos when clicked. Should be hidden when there are no completed todos.
+クリックすると完了済みの todo を削除します。完了済みの todo がない場合は非表示にします。
 
-### Persistence
+### 永続化
 
-Your app should dynamically persist the todos to localStorage. If the framework has capabilities for persisting data (e.g. Backbone.sync), use that. Otherwise, use vanilla localStorage. If possible, use the keys `id`, `title`, `completed` for each item. Make sure to use this format for the localStorage name: `todos-[framework]`. Editing mode should not be persisted.
+アプリは todo を localStorage に動的に永続化する必要があります。フレームワークにデータ永続化の機能があれば（例: Backbone.sync）それを使用し、なければ素の localStorage を使用します。可能であれば各項目のキーには `id`、`title`、`completed` を使用してください。localStorage の名前は `todos-[framework]` の形式にしてください。編集モードは永続化しません。
 
-### Routing
+### ルーティング
 
-Routing is required for all implementations. If supported by the framework, use its built-in capabilities. Otherwise, use the  [Flatiron Director](https://github.com/flatiron/director) routing library located in the `/assets` folder. The following routes should be implemented: `#/` (all - default), `#/active` and `#/completed` (`#!/` is also allowed). When the route changes, the todo list should be filtered on a model level and the `selected` class on the filter links should be toggled. When an item is updated while in a filtered state, it should be updated accordingly. E.g. if the filter is `Active` and the item is checked, it should be hidden. Make sure the active filter is persisted on reload.
+すべての実装でルーティングが必須です。フレームワークがサポートしていればその組み込み機能を使用し、なければ `/assets` フォルダーにある [Flatiron Director](https://github.com/flatiron/director) ルーティングライブラリーを使用してください。実装すべきルートは `#/`（すべて・デフォルト）、`#/active`、`#/completed` です（`#!/` も可）。ルートが変わったら、todo リストはモデルレベルでフィルタリングされ、フィルターリンクの `selected` クラスが切り替わります。フィルター状態のまま項目が更新された場合も、それに応じて表示を更新します。たとえばフィルターが「未完了」のときに項目がチェックされたら、その項目は非表示になります。アクティブなフィルターは再読み込み後も保持されるようにしてください。
