@@ -7,7 +7,7 @@
 
 - `cd examples/javascript-es6 && npm install`
 - `npm run build && npm run serve` → `http://localhost:7002`
-- 本実装のストアはメモリー内（`src/store.js`）のため、リロードでデータは消える。TC-10はこの前提で仕様との差分を確認するケース。
+- 本実装のストアはメモリー内（`src/store.js`）のため、リロードでデータは消える。TC-11はこの前提で仕様との差分を確認するケース。
 
 | 記号 | 意味 |
 | --- | --- |
