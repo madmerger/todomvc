@@ -1,7 +1,7 @@
 module.exports = {
     testEnvironment: "jsdom",
     testMatch: ["**/src/__tests__/**/*.test.js"],
-    collectCoverageFrom: ["src/**/*.js"],
+    collectCoverageFrom: ["src/**/*.js", "!src/__tests__/**"],
     coveragePathIgnorePatterns: ["/src/app\\.js$"],
     coverageThreshold: {
         global: {
