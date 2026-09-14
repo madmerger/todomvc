@@ -1,4 +1,3 @@
-import { vi } from "vitest";
 import Model from "../src/model";
 import Store from "../src/store";
 

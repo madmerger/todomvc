@@ -1,4 +1,3 @@
-import { vi } from "vitest";
 import Controller from "../src/controller";
 import Model from "../src/model";
 import Store from "../src/store";
@@ -44,7 +43,7 @@ describe("Controller", () => {
         view.takeRenders();
     });
 
-    it("binds all view callbacks and ignores blank titles", async () => {
+    it("binds all view callbacks and ignores blank titles", () => {
         expect(Object.keys(view.handlers).sort()).toEqual([
             "itemEdit",
             "itemEditCancel",
@@ -64,8 +63,6 @@ describe("Controller", () => {
         expect(renders.some(({ cmd }) => cmd === "clearNewTodo")).toBe(true);
         expect(renders.some(({ cmd }) => cmd === "showEntries")).toBe(true);
         model.read((todos) => expect(todos[0].title).toBe("new task"));
-
-        await Promise.resolve();
     });
 
     it("toggles individual and all todos in both directions", async () => {
@@ -83,8 +80,6 @@ describe("Controller", () => {
         model.read({ completed: false }, (todos) => expect(todos).toEqual([]));
         controller.toggleAll(false);
         model.read({ completed: false }, (todos) => expect(todos).toHaveLength(2));
-
-        await Promise.resolve();
     });
 
     it("edits, saves, cancels, and removes items", async () => {
@@ -112,8 +107,6 @@ describe("Controller", () => {
         controller.editItemSave(todo.id, " \t ");
         expect(view.takeRenders()).toContainEqual({ cmd: "removeItem", param: todo.id });
         model.read(todo.id, (todos) => expect(todos).toEqual([]));
-
-        await Promise.resolve();
     });
 
     it("removes one item and all completed items", async () => {
@@ -131,8 +124,6 @@ describe("Controller", () => {
         const renders = view.takeRenders();
         expect(renders.filter(({ cmd }) => cmd === "removeItem")).toHaveLength(2);
         model.read((todos) => expect(todos).toEqual([]));
-
-        await Promise.resolve();
     });
 
     it("updates counters for empty, active, and all-completed collections", async () => {

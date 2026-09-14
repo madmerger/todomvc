@@ -1,4 +1,3 @@
-import { vi } from "vitest";
 import Template from "../src/template";
 import View from "../src/view";
 
