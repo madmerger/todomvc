@@ -1,3 +1,4 @@
+import { vi } from "vitest";
 import Store from "../src/store";
 
 const seed = (store, titles) => {
@@ -18,7 +19,7 @@ describe("Store", () => {
     });
 
     it("コレクションが無ければ空で初期化し、コールバックへ渡す", () => {
-        const callback = jest.fn();
+        const callback = vi.fn();
 
         new Store("fresh-db", callback);
 
@@ -27,7 +28,7 @@ describe("Store", () => {
 
     it("既存のコレクションは初期化で上書きしない", () => {
         seed(store, ["既存"]);
-        const callback = jest.fn();
+        const callback = vi.fn();
 
         new Store("test-db", callback);
 
@@ -44,7 +45,7 @@ describe("Store", () => {
 
         it("ID 指定時は既存アイテムのプロパティーを更新する", () => {
             const [item] = seed(store, ["元の題名"]);
-            const callback = jest.fn();
+            const callback = vi.fn();
 
             store.save({ title: "新しい題名", completed: true }, callback, item.id);
 
@@ -75,7 +76,7 @@ describe("Store", () => {
         it("クエリーに一致するアイテムだけ返す", () => {
             const [active, completed] = seed(store, ["未完了", "完了"]);
             store.save({ completed: true }, undefined, completed.id);
-            const callback = jest.fn();
+            const callback = vi.fn();
 
             store.find({ completed: false }, callback);
 
@@ -86,7 +87,7 @@ describe("Store", () => {
 
         it("複数条件をすべて満たすアイテムを返す", () => {
             const [item] = seed(store, ["対象"]);
-            const callback = jest.fn();
+            const callback = vi.fn();
 
             store.find({ id: item.id, completed: false }, callback);
             store.find({ id: item.id, completed: true }, callback);
@@ -103,7 +104,7 @@ describe("Store", () => {
     describe("findAll", () => {
         it("全アイテムを返す", () => {
             seed(store, ["A", "B"]);
-            const callback = jest.fn();
+            const callback = vi.fn();
 
             store.findAll(callback);
 
@@ -118,7 +119,7 @@ describe("Store", () => {
     describe("remove", () => {
         it("ID を指定してアイテムを削除する", () => {
             const [first, second] = seed(store, ["消す", "残す"]);
-            const callback = jest.fn();
+            const callback = vi.fn();
 
             store.remove(first.id, callback);
 
@@ -129,7 +130,7 @@ describe("Store", () => {
 
         it("一致する ID が無ければ何も削除しない", () => {
             seed(store, ["残る"]);
-            const callback = jest.fn();
+            const callback = vi.fn();
 
             store.remove(9999, callback);
 
@@ -148,7 +149,7 @@ describe("Store", () => {
     describe("drop", () => {
         it("全データを削除する", () => {
             seed(store, ["A", "B"]);
-            const callback = jest.fn();
+            const callback = vi.fn();
 
             store.drop(callback);
 

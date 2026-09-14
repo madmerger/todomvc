@@ -1,3 +1,4 @@
+import { vi } from "vitest";
 import { qs, qsa, $on, $delegate, $parent, remove } from "../src/helpers";
 import { setupDom } from "./fixture";
 
@@ -22,7 +23,7 @@ describe("helpers", () => {
 
     describe("$on", () => {
         it("イベントリスナーを登録する", () => {
-            const handler = jest.fn();
+            const handler = vi.fn();
             const button = qs(".clear-completed");
 
             $on(button, "click", handler);
@@ -32,8 +33,8 @@ describe("helpers", () => {
         });
 
         it("useCapture を真偽値へ変換して渡す", () => {
-            const target = { addEventListener: jest.fn() };
-            const handler = jest.fn();
+            const target = { addEventListener: vi.fn() };
+            const handler = vi.fn();
 
             $on(target, "click", handler);
             $on(target, "click", handler, "truthy");
@@ -47,7 +48,7 @@ describe("helpers", () => {
         it("セレクターに一致する要素のイベントだけ処理する", () => {
             const list = qs(".todo-list");
             list.innerHTML = `<li><button class="destroy"></button><span></span></li>`;
-            const handler = jest.fn();
+            const handler = vi.fn();
 
             $delegate(list, ".destroy", "click", handler);
 
@@ -60,10 +61,10 @@ describe("helpers", () => {
 
         it("blur と focus はキャプチャーフェーズで購読する", () => {
             const list = qs(".todo-list");
-            const spy = jest.spyOn(list, "addEventListener");
+            const spy = vi.spyOn(list, "addEventListener");
 
-            $delegate(list, ".edit", "blur", jest.fn());
-            $delegate(list, ".edit", "click", jest.fn());
+            $delegate(list, ".edit", "blur", vi.fn());
+            $delegate(list, ".edit", "click", vi.fn());
 
             expect(spy.mock.calls[0][2]).toBe(true);
             expect(spy.mock.calls[1][2]).toBe(false);

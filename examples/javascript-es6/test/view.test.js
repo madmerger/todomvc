@@ -1,3 +1,4 @@
+import { vi } from "vitest";
 import View from "../src/view";
 import Template from "../src/template";
 import { qs, qsa } from "../src/helpers";
@@ -137,7 +138,7 @@ describe("View", () => {
 
     describe("bindCallback", () => {
         it("newTodo は入力値を渡す", () => {
-            const handler = jest.fn();
+            const handler = vi.fn();
             view.bindCallback("newTodo", handler);
 
             qs(".new-todo").value = "新しいタスク";
@@ -147,7 +148,7 @@ describe("View", () => {
         });
 
         it("removeCompleted はクリックで発火する", () => {
-            const handler = jest.fn();
+            const handler = vi.fn();
             view.bindCallback("removeCompleted", handler);
 
             qs(".clear-completed").click();
@@ -156,7 +157,7 @@ describe("View", () => {
         });
 
         it("toggleAll はチェック状態を渡す", () => {
-            const handler = jest.fn();
+            const handler = vi.fn();
             view.bindCallback("toggleAll", handler);
 
             qs(".toggle-all-label").click();
@@ -166,7 +167,7 @@ describe("View", () => {
         });
 
         it("itemEdit はダブルクリックで ID を渡す", () => {
-            const handler = jest.fn();
+            const handler = vi.fn();
             view.bindCallback("itemEdit", handler);
             renderItems([todoItem(1, "買い物")]);
 
@@ -176,7 +177,7 @@ describe("View", () => {
         });
 
         it("itemRemove は削除ボタンのクリックで ID を渡す", () => {
-            const handler = jest.fn();
+            const handler = vi.fn();
             view.bindCallback("itemRemove", handler);
             renderItems([todoItem(3, "買い物")]);
 
@@ -186,7 +187,7 @@ describe("View", () => {
         });
 
         it("itemToggle はチェックボックスの状態を渡す", () => {
-            const handler = jest.fn();
+            const handler = vi.fn();
             view.bindCallback("itemToggle", handler);
             renderItems([todoItem(4, "買い物")]);
 
@@ -196,7 +197,7 @@ describe("View", () => {
         });
 
         it("itemEditDone は blur で編集内容を渡す", () => {
-            const handler = jest.fn();
+            const handler = vi.fn();
             view.bindCallback("itemEditDone", handler);
             renderItems([todoItem(5, "買い物")]);
             view.render("editItem", { id: 5, title: "買い物" });
@@ -209,32 +210,32 @@ describe("View", () => {
         });
 
         it("itemEditDone は Enter キーで blur を起こす", () => {
-            const handler = jest.fn();
+            const handler = vi.fn();
             view.bindCallback("itemEditDone", handler);
             renderItems([todoItem(6, "買い物")]);
             view.render("editItem", { id: 6, title: "買い物" });
 
             const input = qs('[data-id="6"] input.edit');
-            const blur = jest.spyOn(input, "blur");
+            const blur = vi.spyOn(input, "blur");
             input.dispatchEvent(new KeyboardEvent("keypress", { keyCode: 13, bubbles: true }));
 
             expect(blur).toHaveBeenCalled();
         });
 
         it("itemEditDone は Enter 以外のキーを無視する", () => {
-            view.bindCallback("itemEditDone", jest.fn());
+            view.bindCallback("itemEditDone", vi.fn());
             renderItems([todoItem(7, "買い物")]);
             view.render("editItem", { id: 7, title: "買い物" });
 
             const input = qs('[data-id="7"] input.edit');
-            const blur = jest.spyOn(input, "blur");
+            const blur = vi.spyOn(input, "blur");
             input.dispatchEvent(new KeyboardEvent("keypress", { keyCode: 65, bubbles: true }));
 
             expect(blur).not.toHaveBeenCalled();
         });
 
         it("itemEditDone はキャンセル済みの編集では発火しない", () => {
-            const handler = jest.fn();
+            const handler = vi.fn();
             view.bindCallback("itemEditDone", handler);
             renderItems([todoItem(8, "買い物")]);
             view.render("editItem", { id: 8, title: "買い物" });
@@ -247,7 +248,7 @@ describe("View", () => {
         });
 
         it("itemEditCancel は Escape キーで発火する", () => {
-            const handler = jest.fn();
+            const handler = vi.fn();
             view.bindCallback("itemEditCancel", handler);
             renderItems([todoItem(9, "買い物")]);
             view.render("editItem", { id: 9, title: "買い物" });
@@ -260,7 +261,7 @@ describe("View", () => {
         });
 
         it("itemEditCancel は Escape 以外のキーを無視する", () => {
-            const handler = jest.fn();
+            const handler = vi.fn();
             view.bindCallback("itemEditCancel", handler);
             renderItems([todoItem(10, "買い物")]);
             view.render("editItem", { id: 10, title: "買い物" });
@@ -273,7 +274,7 @@ describe("View", () => {
         });
 
         it("未知のイベント名は何もしない", () => {
-            expect(() => view.bindCallback("unknownEvent", jest.fn())).not.toThrow();
+            expect(() => view.bindCallback("unknownEvent", vi.fn())).not.toThrow();
         });
     });
 });

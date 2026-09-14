@@ -1,3 +1,4 @@
+import { vi } from "vitest";
 import Model from "../src/model";
 
 describe("Model", () => {
@@ -6,18 +7,18 @@ describe("Model", () => {
 
     beforeEach(() => {
         storage = {
-            save: jest.fn(),
-            find: jest.fn(),
-            findAll: jest.fn(),
-            remove: jest.fn(),
-            drop: jest.fn(),
+            save: vi.fn(),
+            find: vi.fn(),
+            findAll: vi.fn(),
+            remove: vi.fn(),
+            drop: vi.fn(),
         };
         model = new Model(storage);
     });
 
     describe("create", () => {
         it("題名の前後の空白を除いて保存する", () => {
-            const callback = jest.fn();
+            const callback = vi.fn();
 
             model.create("  買い物  ", callback);
 
@@ -33,7 +34,7 @@ describe("Model", () => {
 
     describe("read", () => {
         it("関数のみ渡すと全件取得する", () => {
-            const callback = jest.fn();
+            const callback = vi.fn();
 
             model.read(callback);
 
@@ -41,7 +42,7 @@ describe("Model", () => {
         });
 
         it("文字列や数値は ID として検索する", () => {
-            const callback = jest.fn();
+            const callback = vi.fn();
 
             model.read("3", callback);
             model.read(7, callback);
@@ -51,7 +52,7 @@ describe("Model", () => {
         });
 
         it("オブジェクトはクエリーとして検索する", () => {
-            const callback = jest.fn();
+            const callback = vi.fn();
 
             model.read({ completed: true }, callback);
 
@@ -60,7 +61,7 @@ describe("Model", () => {
     });
 
     it("update は ID 付きで保存する", () => {
-        const callback = jest.fn();
+        const callback = vi.fn();
 
         model.update(1, { title: "更新" }, callback);
 
@@ -68,7 +69,7 @@ describe("Model", () => {
     });
 
     it("remove はストレージの削除を呼ぶ", () => {
-        const callback = jest.fn();
+        const callback = vi.fn();
 
         model.remove(2, callback);
 
@@ -76,7 +77,7 @@ describe("Model", () => {
     });
 
     it("removeAll はストレージを破棄する", () => {
-        const callback = jest.fn();
+        const callback = vi.fn();
 
         model.removeAll(callback);
 
@@ -92,7 +93,7 @@ describe("Model", () => {
                     { completed: false },
                 ])
             );
-            const callback = jest.fn();
+            const callback = vi.fn();
 
             model.getCount(callback);
 

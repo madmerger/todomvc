@@ -1,3 +1,4 @@
+import { vi } from "vitest";
 import Controller from "../src/controller";
 import Model from "../src/model";
 import Store from "../src/store";
@@ -5,8 +6,8 @@ import Store from "../src/store";
 class FakeView {
     constructor() {
         this.callbacks = {};
-        this.render = jest.fn();
-        this.bindCallback = jest.fn((event, handler) => {
+        this.render = vi.fn();
+        this.bindCallback = vi.fn((event, handler) => {
             this.callbacks[event] = handler;
         });
     }
