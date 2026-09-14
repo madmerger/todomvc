@@ -1,0 +1,30 @@
+{
+    "name": "todomvc-react-vite",
+    "version": "1.0.0",
+    "description": "A TodoMVC written with React, TypeScript and Vite.",
+    "engines": {
+        "node": ">=18.13.0",
+        "npm": ">=8.19.3"
+    },
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "dev": "vite --port 7003 --open",
+        "build": "tsc && vite build",
+        "serve": "http-server ./dist -p 7003 -c-1 --cors"
+    },
+    "dependencies": {
+        "react": "^18.3.1",
+        "react-dom": "^18.3.1",
+        "todomvc-app-css": "^2.4.2",
+        "todomvc-common": "^1.0.5"
+    },
+    "devDependencies": {
+        "@types/react": "^18.3.12",
+        "@types/react-dom": "^18.3.1",
+        "@vitejs/plugin-react": "^4.3.4",
+        "http-server": "^14.1.1",
+        "typescript": "^5.6.3",
+        "vite": "^5.4.11"
+    }
+}
